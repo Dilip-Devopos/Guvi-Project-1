@@ -8,10 +8,10 @@ set -x
 # git clone https://github.com/sriram-R-krishnan/devops-build.git
 
 # copy the Dockerfile into the cloned repository
-cp Dockerfile Guvi-Project-1/
+# cp Dockerfile Guvi-Project-1/
 
 # change directory to devops-build
-cd Guvi-Project-1
+# cd Guvi-Project-1
 
 # build and push the Docker image
 image_name=$1
