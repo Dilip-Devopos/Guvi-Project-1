@@ -30,8 +30,10 @@ pipeline {
 
         stage('Setup & Build Web') {
             steps {
-                cd 'Guvi-Project-1'
-                sh 'build.sh DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME} DOCKER_VERSION=${DOCKER_VERSION}'
+                sh '''
+                cd Guvi-Project-1
+                build.sh DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME} DOCKER_VERSION=${DOCKER_VERSION}
+                '''
             }
         }
     }
