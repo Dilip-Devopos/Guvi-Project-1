@@ -2,10 +2,10 @@ set -e
 set -x
 
 # remove any existing devops-build directory
-# rm -rf devops-build/
+rm -rf devops-build/
 
 # clone the repository
-# git clone https://github.com/sriram-R-krishnan/devops-build.git
+git clone https://github.com/sriram-R-krishnan/devops-build.git
 
 # copy the Dockerfile into the cloned repository
 cp Dockerfile devops-build/
