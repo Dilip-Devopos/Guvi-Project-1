@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Cleanup') {
             steps {
-                sh 'rm -rf guvi-project-1 || true'
+                sh 'rm -rf Guvi-Project-1 || true'
             }
         }
 
