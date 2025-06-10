@@ -23,7 +23,7 @@ pipeline {
             steps {
                 sh '''
                     echo "Cloning repository..."
-                    git clone https://github.com/sriram-R-krishnan/devops-build
+                    git clone https://github.com/Dilip-Devopos/Guvi-Project-1.git
                 '''
             }
         }
