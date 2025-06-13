@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = "kdilipkumar/backend:v${env.BUILD_NUMBER}"
+        DOCKER_IMAGE = "kdilipkumar/${env.DOCKER_IMAGE_NAME}:v${env.DOCKER_VERSION}"
         DOCKER_IMAGE_NAME = "guvi-project-1"
         DOCKER_VERSION = "${env.BUILD_NUMBER}"
     }
@@ -39,7 +39,7 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Push Docker Image') {
             environment {
                 REGISTRY_CREDENTIALS = credentials('docker-cred')
