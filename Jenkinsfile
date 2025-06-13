@@ -31,8 +31,7 @@ pipeline {
         stage('Setup & Build Web') {
             steps {
                 sh '''
-                cd Guvi-Project-1
-                chmod +x build.sh
+                pwd
                 build.sh DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME} DOCKER_VERSION=${DOCKER_VERSION}
                 '''
             }
