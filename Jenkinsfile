@@ -41,26 +41,7 @@ pipeline {
                 }
             }
         }
-
-        stage('OWASP Dependency-Check Vulnerabilities') {
-            steps {
-                script {
-                    sh '''
-                        /opt/dependency-check/bin/dependency-check.sh \
-                        --project "Guvi-Project-1" \
-                        --scan Guvi-Project-1 \
-                        --out dependency-check-reports \
-                        --format "XML"
-                    '''
-                    sh 'chown -R jenkins:jenkins dependency-check-reports'
-                    sh 'chmod 644 dependency-check-reports/*.xml'
-                    sh 'ls -la dependency-check-reports'
-                }
-                dependencyCheckPublisher pattern: 'dependency-check-reports/*.xml'
-            }
-        }
-
-
+        
         stage('Build & Tag') {
             steps {
                 dir('Guvi-Project-1') {
@@ -84,7 +65,7 @@ pipeline {
                     sh '''
                         echo "Running Trivy vulnerability scan..."
                         trivy --version
-                        trivy image --severity HIGH,CRITICAL ${dockerimage}
+                        trivy image --severity HIGH,CRITICAL --format table -o trivy-report.html
                     '''
                 }
             }
@@ -109,15 +90,19 @@ pipeline {
             emailext(
                 subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Good news!\n\nThe Jenkins job '${env.JOB_NAME}' completed successfully.\nBuild URL: ${env.BUILD_URL}",
-                to: "your_email@example.com"
+                to: "dilipbca99@gmail.com"
+                attachmentsPattern: "trivy-report.htmlpendency-check-reports/dependency-check-report.html"
             )
         }
 
         failure {
+            sh 'tail -n 1000 $BUILD_LOG_FILE > jenkins-console-log.txt || echo "Log not captured" > jenkins-console-log.txt'
             emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
-                to: "your_email@example.com"
+                to: "dilipbca99@gmail.com"
+                attachmentsPattern: 'jenkins-console-log.txt'
+
             )
         }
     }
