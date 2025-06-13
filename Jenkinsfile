@@ -41,7 +41,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Build & Tag') {
             steps {
                 dir('Guvi-Project-1') {
@@ -65,7 +65,7 @@ pipeline {
                     sh '''
                         echo "Running Trivy vulnerability scan..."
                         trivy --version
-                        trivy image --severity HIGH,CRITICAL --format table -o trivy-report.html
+                        trivy image --severity HIGH,CRITICAL ${dockerimage}
                     '''
                 }
             }
