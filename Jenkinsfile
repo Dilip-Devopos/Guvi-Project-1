@@ -41,7 +41,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Build & Tag') {
             steps {
                 dir('Guvi-Project-1') {
@@ -102,7 +102,6 @@ pipeline {
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
                 to: "dilipbca99@gmail.com"
                 attachmentsPattern: 'jenkins-console-log.txt'
-
             )
         }
     }
