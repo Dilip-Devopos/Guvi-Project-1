@@ -41,7 +41,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Build & Tag') {
             steps {
                 dir('Guvi-Project-1') {
@@ -91,7 +91,7 @@ pipeline {
                 subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Good news!\n\nThe Jenkins job '${env.JOB_NAME}' completed successfully.\nBuild URL: ${env.BUILD_URL}",
                 to: "dilipbca99@gmail.com"
-                attachmentsPattern: "trivy-report.htmlpendency-check-reports/dependency-check-report.html"
+                attachmentsPattern: "trivy-report.html,dependency-check-reports/dependency-check-report.html"
             )
         }
 
