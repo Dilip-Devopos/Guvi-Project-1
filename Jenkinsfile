@@ -30,15 +30,16 @@ pipeline {
 
         stage('Setup & Build Web') {
             steps {
-                withCredentials([string(credentialsId: 'docker-cred', variable: 'docker-cred')]) { 
+                withCredentials([string(credentialsId: 'docker-cred', variable: 'docker_cred')]) {
                     sh '''
-                    cd Guvi-Project-1
-                    chmod +x build.sh
-                    ./build.sh ${DOCKER_IMAGE_NAME} ${DOCKER_VERSION}
+                        cd Guvi-Project-1
+                        chmod +x build.sh
+                        ./build.sh ${DOCKER_IMAGE_NAME} ${DOCKER_VERSION}
                     '''
-               }
+                }
             }
         }
+
         stage('Push Docker Image') {
             environment {
                 REGISTRY_CREDENTIALS = credentials('docker-cred')
@@ -53,8 +54,7 @@ pipeline {
             }
         }
     }
-        
-    }
+
     post {
         success {
             emailext(
@@ -72,5 +72,4 @@ pipeline {
             )
         }
     }
-
 }
