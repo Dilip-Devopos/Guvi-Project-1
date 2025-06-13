@@ -7,9 +7,11 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE_NAME = "guvi-project-1"
-        DOCKER_VERSION = "${env.BUILD_NUMBER}"
-        DOCKER_IMAGE = "kdilipkumar/${DOCKER_IMAGE_NAME}:${DOCKER_VERSION}"
+        IMAGE_NAME = "guvi-project-1"
+        VERSION = "${env.BUILD_NUMBER}"
+        DEV_REPO = "kdilipkumar/guvi-dev"
+        PROD_REPO = "kdilipkumar/guvi-prod"
+        REGISTRY_CREDENTIALS = credentials('docker-cred')
     }
 
     stages {
@@ -19,7 +21,7 @@ pipeline {
             }
         }
 
-        stage('Checkout Repository') {
+        stage('Clone Repository') {
             steps {
                 sh '''
                     echo "Cloning repository..."
@@ -28,27 +30,30 @@ pipeline {
             }
         }
 
-        stage('Setup & Build Web') {
+        stage('Build & Tag') {
             steps {
-                sh '''
-                pwd
-                cd Guvi-Project-1
-                ls -ltr
-                chmod +x build.sh
-                ./build.sh ${DOCKER_IMAGE_NAME} ${DOCKER_VERSION}
-                '''
+                dir('Guvi-Project-1') {
+                    sh '''
+                        chmod +x build.sh
+                        if [ "${BRANCH_NAME}" == "master" ]; then
+                            ./build.sh ${IMAGE_NAME} ${VERSION} ${PROD_REPO}
+                        else
+                            ./build.sh ${IMAGE_NAME} ${VERSION} ${DEV_REPO}
+                        fi
+                    '''
+                }
             }
         }
 
-        stage('Push Docker Image') {
-            environment {
-                REGISTRY_CREDENTIALS = credentials('docker-cred')
-            }
+        stage('Push to Docker Hub') {
             steps {
                 script {
-                    def dockerImage = docker.image("${DOCKER_IMAGE}")
-                    docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
-                        dockerImage.push()
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-cred') {
+                        if (env.BRANCH_NAME == 'master') {
+                            sh "docker push ${PROD_REPO}:${VERSION}"
+                        } else {
+                            sh "docker push ${DEV_REPO}:${VERSION}"
+                        }
                     }
                 }
             }

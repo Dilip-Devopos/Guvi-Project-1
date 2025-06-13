@@ -1,25 +1,12 @@
-set -e 
+#!/bin/bash
+set -e
 set -x
 
-# remove any existing devops-build directory
-# rm -rf devops-build/
-
-# clone the repository
-# git clone https://github.com/sriram-R-krishnan/devops-build.git
-
-# copy the Dockerfile into the cloned repository
-# cp Dockerfile Guvi-Project-1/
-
-# change directory to devops-build
-#  cd Guvi-Project-1
-
-# build and push the Docker image
 image_name=$1
 version=$2
 
-# docker build command
-docker build -t $image_name:$version .
+# Build the Docker image
+docker build -t ${image_name}:${version} .
 
-
-# tag the image with the Docker Hub repository
-docker tag $image_name:$version kdilipkumar/$image_name:$version
+# Tag for Docker Hub (e.g., kdilipkumar/guvi-dev or kdilipkumar/guvi-prod)
+docker tag ${image_name}:${version} ${3}/${image_name}:${version}
