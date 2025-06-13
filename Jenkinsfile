@@ -39,12 +39,11 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    // Dynamically determine which repo was used
-                    def repo = (env.BRANCH_NAME == "main") ? "kdilipkumar/guvi-prod" : "kdilipkumar/guvi-dev"
-                    def fullImage = "${repo}:${VERSION}"
+                    def repo = (env.BRANCH_NAME == "main") ? "kdilipkumar/prod" : "kdilipkumar/dev"
+                    def dockerimage = "${repo}:${VERSION}"
 
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-cred') {
-                        sh "docker push ${fullImage}"
+                        sh "docker push ${dockerimage}"
                     }
                 }
             }

@@ -8,9 +8,9 @@ branch_name=$3      # e.g. main or dev
 
 # Decide repo based on branch name
 if [ "$branch_name" = "main" ]; then
-  repo="kdilipkumar/guvi-prod"
+  repo="kdilipkumar/prod"
 else
-  repo="kdilipkumar/guvi-dev"
+  repo="kdilipkumar/dev"
 fi
 
 # Build Docker image
