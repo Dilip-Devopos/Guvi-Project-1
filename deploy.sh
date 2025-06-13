@@ -3,6 +3,7 @@
 set -e
 set -x
 
+# This script deploys a Docker container from an image pulled from Docker Hub.
 # Parameters
 image_name=$1
 version=$2
