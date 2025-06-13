@@ -9,5 +9,5 @@ repo=$3
 # Build the Docker image
 docker build -t ${image_name}:${version} .
 
-# Correct Docker Hub tag format
+# Tag for Docker Hub - dev tag
 docker tag ${image_name}:${version} ${repo}:${version}
