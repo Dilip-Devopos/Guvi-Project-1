@@ -11,7 +11,7 @@ set -x
 # cp Dockerfile Guvi-Project-1/
 
 # change directory to devops-build
-cd Guvi-Project-1
+#  cd Guvi-Project-1
 
 # build and push the Docker image
 image_name=$1

@@ -34,7 +34,8 @@ pipeline {
                 pwd
                 cd Guvi-Project-1
                 ls -ltr
-                build.sh DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME} DOCKER_VERSION=${DOCKER_VERSION}
+                chmod +x build.sh
+                ./build.sh DOCKER_IMAGE_NAME=${DOCKER_IMAGE_NAME} DOCKER_VERSION=${DOCKER_VERSION}
                 '''
             }
         }
