@@ -34,8 +34,9 @@ pipeline {
             steps {
                 dir('Guvi-Project-1') {
                     sh '''
+                        #!/bin/bash
                         chmod +x build.sh
-                        if [ "${BRANCH_NAME}" == "main" ]; then
+                        if [[ "\$BRANCH_NAME" == "main" ]]; then
                             ./build.sh ${IMAGE_NAME} ${VERSION} ${PROD_REPO}
                         else
                             ./build.sh ${IMAGE_NAME} ${VERSION} ${DEV_REPO}
