@@ -18,6 +18,3 @@ docker build -t ${image_name}:${version} .
 
 # Tag it for the appropriate repo
 docker tag ${image_name}:${version} ${repo}:${version}
-
-# Export final tag for use in Jenkinsfile
-echo "DOCKER_TAGGED_IMAGE=${repo}:${version}" >> "$BASH_ENV"
