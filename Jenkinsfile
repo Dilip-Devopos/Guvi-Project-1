@@ -50,7 +50,7 @@ pipeline {
                         --project "Guvi-Project-1" \
                         --scan Guvi-Project-1 \
                         --out dependency-check-reports \
-                        --format "HTML,XML" \
+                        --format "HTML" \
                     '''
                     sh 'chown -R jenkins:jenkins dependency-check-reports'
                     sh 'chmod 644 dependency-check-reports/*.xml'
