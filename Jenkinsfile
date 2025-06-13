@@ -35,7 +35,7 @@ pipeline {
                 dir('Guvi-Project-1') {
                     sh '''
                         chmod +x build.sh
-                        if [ "${BRANCH_NAME}" == "master" ]; then
+                        if [ "${BRANCH_NAME}" == "main" ]; then
                             ./build.sh ${IMAGE_NAME} ${VERSION} ${PROD_REPO}
                         else
                             ./build.sh ${IMAGE_NAME} ${VERSION} ${DEV_REPO}
@@ -49,7 +49,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-cred') {
-                        if (env.BRANCH_NAME == 'master') {
+                        if (env.BRANCH_NAME == 'main') {
                             sh "docker push ${PROD_REPO}:${VERSION}"
                         } else {
                             sh "docker push ${DEV_REPO}:${VERSION}"
