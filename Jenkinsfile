@@ -48,7 +48,7 @@ pipeline {
                     sh '''
                         /opt/dependency-check/bin/dependency-check.sh \
                         --project "Guvi-Project-1" \
-                        --scan /var/lib/jenkins/workspace/Guvi/Guvi-Project-1/build/* \
+                        --scan Guvi-Project-1/build \
                         --out dependency-check-reports \
                         --format "XML"
                     '''
