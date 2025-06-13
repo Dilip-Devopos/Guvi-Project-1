@@ -28,10 +28,64 @@ pipeline {
             }
         }
 
+        stage('Static Code Analysis') {
+            environment {
+                SONAR_URL = "http://192.168.0.180:9000"
+            }
+            steps {
+                withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+                    sh '''
+                        cd Guvi-Project-1/build
+                        mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}
+                    '''
+                }
+            }
+        }
+
+        stage('OWASP Dependency-Check Vulnerabilities') {
+            steps {
+                script {
+                    sh '''
+                        /opt/dependency-check/bin/dependency-check.sh \
+                        --project "Guvi-Project-1" \
+                        --scan /var/lib/jenkins/workspace/Guvi/Guvi-Project-1/build/* \
+                        --out dependency-check-reports \
+                        --format "XML"
+                    '''
+                    sh 'chown -R jenkins:jenkins dependency-check-reports'
+                    sh 'chmod 644 dependency-check-reports/*.xml'
+                    sh 'ls -la dependency-check-reports'
+                }
+                dependencyCheckPublisher pattern: 'dependency-check-reports/*.xml'
+            }
+        }
+
+
         stage('Build & Tag') {
             steps {
                 dir('Guvi-Project-1') {
                     sh "./build.sh ${IMAGE_NAME} ${VERSION} ${BRANCH_NAME}"
+                }
+            }
+        }
+        
+        stage('Prepare Docker Image Name') {
+            steps {
+                script {
+                    def repo = (env.BRANCH_NAME == "main") ? "kdilipkumar/prod" : "kdilipkumar/dev"
+                    env.dockerimage = "${repo}:${VERSION}"
+                }
+            }
+        }
+        
+        stage('Security Scan with Trivy') {
+            steps {
+                script {
+                    sh '''
+                        echo "Running Trivy vulnerability scan..."
+                        trivy --version
+                        trivy image --severity HIGH,CRITICAL ${dockerimage}
+                    '''
                 }
             }
         }
