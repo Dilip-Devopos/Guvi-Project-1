@@ -9,8 +9,6 @@ pipeline {
     environment {
         IMAGE_NAME = "guvi-project-1"
         VERSION = "${env.BUILD_NUMBER}"
-        DEV_REPO = "kdilipkumar/guvi-dev"
-        PROD_REPO = "kdilipkumar/guvi-prod"
         REGISTRY_CREDENTIALS = credentials('docker-cred')
     }
 
@@ -33,15 +31,7 @@ pipeline {
         stage('Build & Tag') {
             steps {
                 dir('Guvi-Project-1') {
-                    sh '''
-                        #!/bin/bash
-                        chmod +x build.sh
-                        if [[ "\$BRANCH_NAME" == "main" ]]; then
-                            ./build.sh ${IMAGE_NAME} ${VERSION} ${PROD_REPO}
-                        else
-                            ./build.sh ${IMAGE_NAME} ${VERSION} ${DEV_REPO}
-                        fi
-                    '''
+                    sh "./build.sh ${IMAGE_NAME} ${VERSION} ${BRANCH_NAME}"
                 }
             }
         }
@@ -49,23 +39,24 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-cred') {
-                        if (env.BRANCH_NAME == 'main') {
-                            sh "docker push ${PROD_REPO}:${VERSION}"
-                        } else {
-                            sh "docker push ${DEV_REPO}:${VERSION}"
-                        }
+                    // Dynamically determine which repo was used
+                    def repo = (env.BRANCH_NAME == "main") ? "kdilipkumar/guvi-prod" : "kdilipkumar/guvi-dev"
+                    def fullImage = "${repo}:${VERSION}"
+
+                    docker.withRegistry('https://index.docker.io/v1/', REGISTRY_CREDENTIALS) {
+                        sh "docker push ${fullImage}"
                     }
                 }
             }
         }
     }
+
     post {
         success {
             emailext(
                 subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Good news!\n\nThe Jenkins job '${env.JOB_NAME}' completed successfully.\nBuild URL: ${env.BUILD_URL}",
-                to: ""
+                to: "your_email@example.com"
             )
         }
 
@@ -73,9 +64,8 @@ pipeline {
             emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
-                to: ""
+                to: "your_email@example.com"
             )
         }
     }
-
 }
