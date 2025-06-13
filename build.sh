@@ -23,8 +23,3 @@ docker build -t $image_name:$version .
 
 # tag the image with the Docker Hub repository
 docker tag $image_name:$version kdilipkumar/$image_name:$version
-
-# push the image to Docker Hub
-docker login -u kdilipkumar -p "$DOCKERHUB_PASSWORD"
-
-docker push kdilipkumar/$image_name:$version

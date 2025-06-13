@@ -30,23 +30,23 @@ pipeline {
 
         stage('Setup & Build Web') {
             steps {
-                withCredentials([string(credentialsId: 'docker-cred', variable: 'docker_cred')]) {
-                    sh '''
-                        cd Guvi-Project-1
-                        chmod +x build.sh
-                        ./build.sh ${DOCKER_IMAGE_NAME} ${DOCKER_VERSION}
-                    '''
-                }
+                sh '''
+                pwd
+                cd Guvi-Project-1
+                ls -ltr
+                chmod +x build.sh
+                ./build.sh ${DOCKER_IMAGE_NAME} ${DOCKER_VERSION}
+                '''
             }
         }
-
+        
         stage('Push Docker Image') {
             environment {
                 REGISTRY_CREDENTIALS = credentials('docker-cred')
             }
             steps {
                 script {
-                    def dockerImage = docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_VERSION}")
+                    def dockerImage = docker.image("${DOCKER_IMAGE}")
                     docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
                         dockerImage.push()
                     }
@@ -54,7 +54,6 @@ pipeline {
             }
         }
     }
-
     post {
         success {
             emailext(
@@ -72,4 +71,5 @@ pipeline {
             )
         }
     }
+
 }
