@@ -115,15 +115,17 @@ pipeline {
 
         failure {
             script {
-                def logFile = "jenkins-console-log-${env.BUILD_NUMBER}.txt"
-                def logText = currentBuild.rawBuild.getLog(1000).join("\n")
-                writeFile file: logFile, text: logText
-            }
+                def logFile = "build-log-${env.BUILD_NUMBER}.txt"
+                sh """
+                    mkdir -p build-logs
+                    tail -n 1000 "\$WORKSPACE/../${env.JOB_NAME}/builds/${env.BUILD_NUMBER}/log" > "build-logs/${logFile}" || echo 'Log not captured' > "build-logs/${logFile}"
+                """  
             emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
+                mimeType: 'text/html',
                 to: "dilipbca99@gmail.com",
-                attachmentsPattern: "jenkins-console-log-${env.BUILD_NUMBER}.txt"
+                attachmentsPattern: "build-logs/${logFile}"
             )
         }
     }
