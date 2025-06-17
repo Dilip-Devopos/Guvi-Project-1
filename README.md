@@ -63,9 +63,7 @@ This project demonstrates a complete CI/CD pipeline setup for a ReactJS frontend
 ├── .gitignore
 ├── .dockerignore
 ├── docker-compose.yml
-├── src/ # ReactJS source code
-├── public/
-
+├── build
 
 ---
 
