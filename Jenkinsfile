@@ -127,6 +127,9 @@ pipeline {
                 to: "dilipbca99@gmail.com",
                 attachmentsPattern: "build-logs/${logFile}"
             )
+            }
         }
     }
 }
+
+    
