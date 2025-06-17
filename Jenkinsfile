@@ -122,11 +122,7 @@ pipeline {
                 def logFile = "jenkins-log-${env.BUILD_NUMBER}.txt"
                 def logPath = "/var/lib/jenkins/jobs/${multibranchJob}/branches/${branchName}/builds/${env.BUILD_NUMBER}/log"
                 sh """
-                    if [ -f "${logPath}" ]; then
-                        cat "${logPath}" > ${logFile}
-                    else
-                        echo "Log not found at ${logPath}" > ${logFile}
-                    fi
+                    cat "${logPath}" > ${logFile}
                 """    
                 emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
