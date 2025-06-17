@@ -124,8 +124,8 @@ pipeline {
                     <p>Jenkins job <strong>${env.JOB_NAME}</strong> has failed.</p>
                     <p><a href="${env.BUILD_URL}">View Build</a></p>
                     <p>The full build log is attached.</p>
-                """
-                mimeType: 'text/html',
+                """,
+                mimeType: 'text/html',    
                 to: "dilipbca99@gmail.com",
                 attachmentsPattern: logFile
             )
