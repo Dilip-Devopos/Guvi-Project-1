@@ -122,7 +122,7 @@ pipeline {
                 def logFile = "jenkins-log-${env.BUILD_NUMBER}.txt"
                 def logPath = "/var/lib/jenkins/jobs/${multibranchJob}/branches/${branchName}/builds/${env.BUILD_NUMBER}/log"
                 sh """
-                    ls -ltr ${logPath}
+                    sudo ls -ltr ${logPath}
                 """    
                 emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
