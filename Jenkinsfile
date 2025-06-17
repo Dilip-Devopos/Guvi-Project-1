@@ -120,7 +120,7 @@ pipeline {
                 writeFile file: logFile, text: logText
             }
             emailext(
-                subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+                subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
                 to: "dilipbca99@gmail.com",
                 attachmentsPattern: "jenkins-console-log-${env.BUILD_NUMBER}.txt"
