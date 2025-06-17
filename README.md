@@ -203,9 +203,4 @@ This project ensures:
 Docker Hub credentials securely stored in Jenkins Credentials.
 Jenkins pipeline runs in Docker agents.
 Email setup required for sending notifications.
-EC2 instance configured for container deployments and monitoring.
-
-
-
-
-
+EC2 instance configured for container deployments and monitoring
