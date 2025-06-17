@@ -115,10 +115,12 @@ pipeline {
 
         failure {
             script {
-                def jobName = env.JOB_NAME.replaceAll('%2F', '/')
+                def jobName = env.JOB_NAME
+                def parts = jobName.tokenize('/')
+                def multibranchJob = parts[0]
+                def branchName = parts[1]
                 def logFile = "jenkins-log-${env.BUILD_NUMBER}.txt"
-                def logPath = "/var/lib/jenkins/jobs/${jobName}/builds/${env.BUILD_NUMBER}/log"
-                logPath = logPath.replaceAll('"', '\\"')
+                def logPath = "/var/lib/jenkins/jobs/${multibranchJob}/branches/${branchName}/builds/${env.BUILD_NUMBER}/log"
                 sh """
                     mkdir -p logs
                     if [ -f "${logPath}" ]; then
@@ -130,7 +132,6 @@ pipeline {
             emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
-                mimeType: 'text/html',
                 to: "dilipbca99@gmail.com",
                 attachmentsPattern: "logs/${logFile}"
             )
