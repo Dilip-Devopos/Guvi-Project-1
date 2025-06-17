@@ -125,14 +125,14 @@ pipeline {
                     if [ -f "${logPath}" ]; then
                         tail -n 1000 "${logPath}" > ${logFile}
                     else
-                        echo "Log not found at ${logPath}" > logs/${logFile}
+                        echo "Log not found at ${logPath}" > ${logFile}
                     fi    
                 """  
             emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
                 to: "dilipbca99@gmail.com",
-                attachmentsPattern: "logs/${logFile}"
+                attachmentsPattern: "${logFile}"
             )
             }
         }
