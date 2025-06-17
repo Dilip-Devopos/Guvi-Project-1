@@ -115,25 +115,19 @@ pipeline {
 
         failure {
             script {
-                def jobName = env.JOB_NAME
-                def parts = jobName.tokenize('/')
-                def multibranchJob = parts[0]
-                def branchName = parts[1]
                 def logFile = "jenkins-log-${env.BUILD_NUMBER}.txt"
-                def logPath = "/var/lib/jenkins/jobs/${multibranchJob}/branches/${branchName}/builds/${env.BUILD_NUMBER}/log"
-                sh """
-                    if [ -f "${logPath}" ]; then
-                        ls
-                        sudo cat "${logPath}" > ${logFile}
-                    else
-                        echo "Log not found at ${logPath}" > ${logFile}
-                    fi    
-                """  
+                def logContent = currentBuild.rawBuild.getLog()  // Get full build log
+                writeFile file: logFile, text: logContent.join("\n")  // Save to file
             emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
+                body: """
+                    <p>Jenkins job <strong>${env.JOB_NAME}</strong> has failed.</p>
+                    <p><a href="${env.BUILD_URL}">View Build</a></p>
+                    <p>The full build log is attached.</p>
+                """
+                mimeType: 'text/html',
                 to: "dilipbca99@gmail.com",
-                attachmentsPattern: "${logFile}"
+                attachmentsPattern: logFile
             )
             }
         }
