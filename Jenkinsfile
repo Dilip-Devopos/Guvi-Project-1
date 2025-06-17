@@ -122,9 +122,8 @@ pipeline {
                 def logFile = "jenkins-log-${env.BUILD_NUMBER}.txt"
                 def logPath = "/var/lib/jenkins/jobs/${multibranchJob}/branches/${branchName}/builds/${env.BUILD_NUMBER}/log"
                 sh """
-                    mkdir -p logs
                     if [ -f "${logPath}" ]; then
-                        tail -n 1000 "${logPath}" > logs/${logFile}
+                        tail -n 1000 "${logPath}" > ${logFile}
                     else
                         echo "Log not found at ${logPath}" > logs/${logFile}
                     fi    
