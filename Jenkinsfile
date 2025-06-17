@@ -123,7 +123,7 @@ pipeline {
                 def logPath = "/var/lib/jenkins/jobs/${multibranchJob}/branches/${branchName}/builds/${env.BUILD_NUMBER}/log"
                 sh """
                     if [ -f "${logPath}" ]; then
-                        tail -n 1000 "${logPath}" > ${logFile}
+                        cp "${logPath}" > ${logFile}
                     else
                         echo "Log not found at ${logPath}" > ${logFile}
                     fi    
