@@ -115,17 +115,24 @@ pipeline {
 
         failure {
             script {
-                def logFile = "build-log-${env.BUILD_NUMBER}.txt"
+                def jobName = env.JOB_NAME.replaceAll('%2F', '/')
+                def logFile = "jenkins-log-${env.BUILD_NUMBER}.txt"
+                def logPath = "/var/lib/jenkins/jobs/${jobName}/builds/${env.BUILD_NUMBER}/log"
+                logPath = logPath.replaceAll('"', '\\"')
                 sh """
-                    mkdir -p build-logs
-                    tail -n 1000 "\$WORKSPACE/../${env.JOB_NAME}/builds/${env.BUILD_NUMBER}/log" > "build-logs/${logFile}" || echo 'Log not captured' > "build-logs/${logFile}"
+                    mkdir -p logs
+                    if [ -f "${logPath}" ]; then
+                        tail -n 1000 "${logPath}" > logs/${logFile}
+                    else
+                        echo "Log not found at ${logPath}" > logs/${logFile}
+                    fi    
                 """  
             emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
                 mimeType: 'text/html',
                 to: "dilipbca99@gmail.com",
-                attachmentsPattern: "build-logs/${logFile}"
+                attachmentsPattern: "logs/${logFile}"
             )
             }
         }
