@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'kdilipkumar/jenkins-agent:v19'
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock -v /var/jenkins_home/dep-check-data:/usr/share/dependency-check/data'
         }
     }
 
@@ -51,6 +51,7 @@ pipeline {
                         --scan Guvi-Project-1 \
                         --out dependency-check-reports \
                         --format "HTML" \
+                        --data /usr/share/dependency-check/data
                     '''
                     sh 'chown -R jenkins:jenkins dependency-check-reports'
                     sh 'chmod 644 dependency-check-reports/*.xml'
