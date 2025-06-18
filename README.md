@@ -4,6 +4,21 @@
 
 This project demonstrates a complete CI/CD pipeline setup for a ReactJS frontend application using Jenkins Multibranch Pipelines. The pipeline is configured to automatically build, scan, and deploy Docker images whenever changes are pushed to the Git repository. It also includes monitoring and alerting using Prometheus, Alertmanager, and Grafana on AWS EC2.
 
+Git-repo-url:  https://github.com/Dilip-Devopos/Guvi-Project-1/tree/main
+
+Deployed siteurl: http://18.60.226.5/
+
+Docker-images-name: kdilipkumar/dev:8       -> public repo 
+                    kdilipkumar/prod:25     -> private repo
+					
+Prometheus : http://18.60.226.5:9090/
+
+Grafana:  http://18.60.226.5:3000
+
+Sonarqube: http://18.61.24.207:9000/projects		
+	
+Jenkins-url: http://18.61.24.207:8080		
+
 ---
 
 ## 🚀 Tech Stack
