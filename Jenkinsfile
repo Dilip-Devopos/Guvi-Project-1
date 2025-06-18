@@ -39,7 +39,7 @@ pipeline {
                         sonar-scanner -Dsonar.projectKey=Guvi-Project-1-prod -Dsonar.sources=. -Dsonar.host.url=${SONAR_URL} -Dsonar.login=${SONAR_AUTH_TOKEN}
                     '''
                 }
-            }
+            }    
         }
 
         stage('OWASP Dependency-Check Vulnerabilities') {
@@ -118,8 +118,7 @@ pipeline {
             emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
-                to: "dilipbca99@gmail.com",
-                attachmentsPattern: 'jenkins-console-log.txt'
+                to: "dilipbca99@gmail.com"
             )
         }
     }
