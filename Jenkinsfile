@@ -36,7 +36,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
                     sh '''
                         cd Guvi-Project-1
-                        sonar-scanner -Dsonar.projectKey=Guvi-Project-1-prod -Dsonar.sources=. -Dsonar.host.url=${SONAR_URL} -Dsonar.login=${SONAR_AUTH_TOKEN}
+                        sonar-scanner -Dsonar.projectKey=Guvi-Project-1-dev -Dsonar.sources=. -Dsonar.host.url=${SONAR_URL} -Dsonar.login=${SONAR_AUTH_TOKEN}
                     '''
                 }
             }    
