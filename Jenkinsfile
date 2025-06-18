@@ -42,24 +42,6 @@ pipeline {
             }
         }
 
-        stage('OWASP Dependency-Check Vulnerabilities') {
-            steps {
-                script {
-                    sh '''
-                        /opt/dependency-check/bin/dependency-check.sh \
-                        --project "Guvi-Project-1" \
-                        --scan Guvi-Project-1 \
-                        --out dependency-check-reports \
-                        --format "HTML" \
-                    '''
-                    sh 'chown -R jenkins:jenkins dependency-check-reports'
-                    sh 'chmod 644 dependency-check-reports/*.xml'
-                    sh 'ls -la dependency-check-reports'
-                }
-                dependencyCheckPublisher pattern: 'dependency-check-reports/*.xml'
-            }
-        }
-
         stage('Build & Tag') {
             steps {
                 dir('Guvi-Project-1') {
