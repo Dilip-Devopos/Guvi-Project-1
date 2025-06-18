@@ -39,6 +39,24 @@ pipeline {
                         sonar-scanner -Dsonar.projectKey=Guvi-Project-1-prod -Dsonar.sources=. -Dsonar.host.url=${SONAR_URL} -Dsonar.login=${SONAR_AUTH_TOKEN}
                     '''
                 }
+            }    
+        }
+
+        stage('OWASP Dependency-Check Vulnerabilities') {
+            steps {
+                script {
+                    sh '''
+                        /opt/dependency-check/bin/dependency-check.sh \
+                        --project "Guvi-Project-1" \
+                        --scan Guvi-Project-1 \
+                        --out dependency-check-reports \
+                        --format "HTML" \
+                    '''
+                    sh 'chown -R jenkins:jenkins dependency-check-reports'
+                    sh 'chmod 644 dependency-check-reports/*.xml'
+                    sh 'ls -la dependency-check-reports'
+                }
+                dependencyCheckPublisher pattern: 'dependency-check-reports/*.xml'
             }
         }
 
@@ -96,13 +114,10 @@ pipeline {
         }
 
         failure {
-            sh 'tail -n 1000 $BUILD_LOG_FILE > jenkins-console-log.txt || echo "Log not captured" > jenkins-console-log.txt'
                 emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
-                mimeType: 'text/html',
-                to: "dilipbca99@gmail.com",
-                attachmentsPattern: logFile
+                to: "dilipbca99@gmail.com"
             )
         }
     }
