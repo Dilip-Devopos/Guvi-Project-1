@@ -46,6 +46,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                        mkdir -p dependency-check-reports
                         /opt/dependency-check/bin/dependency-check.sh \
                         --project "Guvi-Project-1" \
                         --scan Guvi-Project-1 \
