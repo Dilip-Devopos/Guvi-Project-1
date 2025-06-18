@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'kdilipkumar/jenkins-agent:v19'
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+            args '--user root -v /var/run/docker.sock:/var/run/docker.sock -v /var/jenkins_home/dep-check-data:/usr/share/dependency-check/data'
         }
     }
 
@@ -30,7 +30,7 @@ pipeline {
 
         stage('Static Code Analysis') {
             environment {
-                SONAR_URL = "http://192.168.0.180:9000"
+                SONAR_URL = "http://18.61.24.207:9000"
             }
             steps {
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
@@ -50,7 +50,8 @@ pipeline {
                         --project "Guvi-Project-1" \
                         --scan Guvi-Project-1 \
                         --out dependency-check-reports \
-                        --format "HTML" \
+                        --format "ALL" \
+                        --data /usr/share/dependency-check/data
                     '''
                     sh 'chown -R jenkins:jenkins dependency-check-reports'
                     sh 'chmod 644 dependency-check-reports/*.xml'
@@ -114,7 +115,6 @@ pipeline {
         }
 
         failure {
-            sh 'tail -n 1000 $BUILD_LOG_FILE > jenkins-console-log.txt || echo "Log not captured" > jenkins-console-log.txt'
             emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
