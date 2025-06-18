@@ -85,7 +85,7 @@ pipeline {
                     sh '''
                         echo "Running Trivy vulnerability scan..."
                         trivy --version
-                        TRIVY_CACHE_DIR=/apps/docker/trivy-cache trivy image --severity HIGH,CRITICAL --format table -o trivy-report.html ${dockerimage}
+                        trivy image --severity HIGH,CRITICAL --format table -o trivy-report.html ${dockerimage}
                     '''
                 }
             }
