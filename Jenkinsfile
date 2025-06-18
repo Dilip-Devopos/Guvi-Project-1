@@ -47,7 +47,7 @@ pipeline {
                 script {
                     sh '''
                         /opt/dependency-check/bin/dependency-check.sh \
-                        --project "Guvi-Project-1" \
+                        --project "Guvi-Project-dev" \
                         --scan Guvi-Project-1 \
                         --out dependency-check-reports \
                         --format "ALL" \
