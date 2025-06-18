@@ -30,7 +30,7 @@ pipeline {
 
         stage('Static Code Analysis') {
             environment {
-                SONAR_URL = "http://192.168.0.180:9000"
+                SONAR_URL = "http://18.61.24.207:9000"
             }
             steps {
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
@@ -114,16 +114,7 @@ pipeline {
         }
 
         failure {
-            script {
-                def jobName = env.JOB_NAME
-                def parts = jobName.tokenize('/')
-                def multibranchJob = parts[0]
-                def branchName = parts[1]
-                def logFile = "jenkins-log-${env.BUILD_NUMBER}.txt"
-                def logPath = "/var/lib/jenkins/jobs/${multibranchJob}/branches/${branchName}/builds/${env.BUILD_NUMBER}/log"
-                sh """
-                    sudo ls -ltr ${logPath}
-                """    
+            sh 'tail -n 1000 $BUILD_LOG_FILE > jenkins-console-log.txt || echo "Log not captured" > jenkins-console-log.txt'
                 emailext(
                 subject: "FAILURE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                 body: "Unfortunately, the Jenkins job '${env.JOB_NAME}' has failed.\nBuild URL: ${env.BUILD_URL}",
@@ -131,7 +122,6 @@ pipeline {
                 to: "dilipbca99@gmail.com",
                 attachmentsPattern: logFile
             )
-            }
         }
     }
 }
